@@ -12,9 +12,9 @@ namespace RickApps.UploadFilesMVC.Controllers
 {
     public class ItemsController : Controller
     {
-        private readonly RickAppsUploadFilesMVCContext _context;
+        private readonly EFContext _context;
 
-        public ItemsController(RickAppsUploadFilesMVCContext context)
+        public ItemsController(EFContext context)
         {
             _context = context;
         }

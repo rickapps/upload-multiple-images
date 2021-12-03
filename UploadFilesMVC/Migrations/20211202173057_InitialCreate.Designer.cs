@@ -10,7 +10,7 @@ using RickApps.UploadFilesMVC.Data;
 
 namespace RickApps.UploadFilesMVC.Migrations
 {
-    [DbContext(typeof(RickAppsUploadFilesMVCContext))]
+    [DbContext(typeof(EFContext))]
     [Migration("20211202173057_InitialCreate")]
     partial class InitialCreate
     {

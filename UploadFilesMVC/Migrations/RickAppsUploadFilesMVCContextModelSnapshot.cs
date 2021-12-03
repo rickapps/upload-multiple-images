@@ -9,7 +9,7 @@ using RickApps.UploadFilesMVC.Data;
 
 namespace RickApps.UploadFilesMVC.Migrations
 {
-    [DbContext(typeof(RickAppsUploadFilesMVCContext))]
+    [DbContext(typeof(EFContext))]
     partial class RickAppsUploadFilesMVCContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
