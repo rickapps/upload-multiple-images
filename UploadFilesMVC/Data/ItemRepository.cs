@@ -1,8 +1,5 @@
 ﻿using RickApps.UploadFilesMVC.Interfaces;
 using RickApps.UploadFilesMVC.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RickApps.UploadFilesMVC.Data
 {

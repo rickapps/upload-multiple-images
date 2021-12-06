@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RickApps.UploadFilesMVC.Data;
+using RickApps.UploadFilesMVC.Interfaces;
 
 namespace RickApps.UploadFilesMVC
 {
@@ -24,6 +25,9 @@ namespace RickApps.UploadFilesMVC
 
             services.AddDbContext<EFContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("RickAppsUploadFilesMVCContext")));
+            
+            // Add our unit of work to manage all our repositories
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

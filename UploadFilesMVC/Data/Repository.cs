@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace RickApps.UploadFilesMVC.Data
 {
@@ -37,6 +38,11 @@ namespace RickApps.UploadFilesMVC.Data
             // I didn't change it because I wanted the code to look like the videos. But feel free to change
             // this on your own.
             return Context.Set<TEntity>().ToList();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await Context.Set<TEntity>().ToListAsync();
         }
 
         public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
