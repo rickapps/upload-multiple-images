@@ -10,6 +10,8 @@ namespace RickApps.UploadFilesMVC.Models
         public int PhotoID { get; set; }
         public int ItemID { get; set; }
         public int Sequence { get; set; }
-        public string Location { get; set; }
+        public string LinkToLargeImage { get; set; }
+        public string LinkToMediumImage { get; set; }
+        public string LinkToSmallImage { get; set; }
     }
 }

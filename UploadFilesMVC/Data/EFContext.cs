@@ -10,7 +10,7 @@ namespace RickApps.UploadFilesMVC.Data
         {
         }
 
-        public DbSet<Item> Item { get; set; }
-        public DbSet<Photo> Photo { get; set; }
+        public virtual DbSet<Item> Item { get; set; }
+        public virtual DbSet<Photo> Photo { get; set; }
     }
 }
