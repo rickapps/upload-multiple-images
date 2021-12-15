@@ -8,7 +8,7 @@ namespace RickApps.UploadFilesMVC.ViewModels
     {
         public AdminIndexViewModel()
         {
-            ItemStatus = ItemListingStatus.Active;
+            Status = ItemListingStatus.Active;
         }
         /// <summary>
         /// Gets or sets the sorting combo box list.
@@ -23,6 +23,6 @@ namespace RickApps.UploadFilesMVC.ViewModels
         /// <summary>
         /// The current display - archived or active listings
         /// </summary>
-        public ItemListingStatus ItemStatus { get; set; }
+        public ItemListingStatus Status { get; set; }
     }
 }

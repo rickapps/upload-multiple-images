@@ -11,7 +11,6 @@ using System;
 
 namespace RickApps.UploadFilesMVC.Controllers
 {
-    [Authorize]
     public class AdminController : BaseController
     {
         #region Constructors
@@ -25,18 +24,19 @@ namespace RickApps.UploadFilesMVC.Controllers
         #endregion
 
         /// <summary>
-        /// Display our default view
+        /// Display our default view. I don't decorate the method with [HttpPost] as I don't 
+        /// need to have two Index methods.
         /// </summary>
         /// <param name="ItemStatus"></param>
         /// <returns></returns>
-        public ActionResult Index(ItemListingStatus status = ItemListingStatus.Active)
+        public ActionResult Index(ItemListingStatus Status = ItemListingStatus.Active)
         {
             AdminIndexViewModel vm = new AdminIndexViewModel();
             // Let's see how complicated we can make it just to populate a simple drop down.
-            // Seriously, you might want to obtain all your data from a repository for larger projects.
-            vm.StatusList = new SelectList(((ItemRepository)_repository.Items).ItemStatusList, "Value", "Key", status);
-            vm.ItemStatus = status;
-            vm.Items = ((ItemRepository)_repository.Items).GetAdminItems(status);
+            // But seriously, you really might want to obtain all your data from a repository for larger projects.
+            vm.StatusList = new SelectList(((ItemRepository)_repository.Items).ItemStatusList, "Key", "Value", Status);
+            vm.Status = Status;
+            vm.Items = ((ItemRepository)_repository.Items).GetAdminItems(Status);
             return View(vm);
         }
 
@@ -139,7 +139,7 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <param name="collection"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Delete(int itemID, FormCollection collection)
+        public ActionResult Delete(int itemID, IFormCollection collection)
         {
             ItemListingStatus initStatus = ItemListingStatus.Active;
             try

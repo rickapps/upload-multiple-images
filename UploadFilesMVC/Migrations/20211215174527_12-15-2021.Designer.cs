@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RickApps.UploadFilesMVC.Data;
 
@@ -11,9 +12,10 @@ using RickApps.UploadFilesMVC.Data;
 namespace RickApps.UploadFilesMVC.Migrations
 {
     [DbContext(typeof(EFContext))]
-    partial class RickAppsUploadFilesMVCContextModelSnapshot : ModelSnapshot
+    [Migration("20211215174527_12-15-2021")]
+    partial class _12152021
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
