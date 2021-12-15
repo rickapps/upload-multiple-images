@@ -6,6 +6,9 @@ using RickApps.UploadFilesMVC.Interfaces;
 using RickApps.UploadFilesMVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
@@ -20,9 +23,17 @@ namespace RickApps.UploadFilesMVC.Controllers
         {
             hostEnv = env;
         }
-        private void InitProperties(int batchNo)
+
+        // We use the item number to determine the folder for uploaded files. Rather than put all pics
+        // into a single folder, we will create a new folder for every 100 items. The intent is to keep
+        // from having a very large number of files in a single folder which could slow retrieval.
+        private void InitProperties(int Number)
         {
-            ServerDestinationPath = String.Format("\\pics\\{0}\\{1}\\", folderYear, BatchNumber);
+            // Remove the rightmost two digits from Number to determine our destination folder
+            int leftmost = Number / 100;
+            // Make the folder name be at least five characters long
+            string folderName = string.Format("{0:00000}", leftmost);
+            ServerDestinationPath = Path.Combine(hostEnv.WebRootPath, "\\pics\\", folderName);
             return;
         }
 
@@ -44,13 +55,12 @@ namespace RickApps.UploadFilesMVC.Controllers
                 string serverSavePath;
                 List<string> newPics = new List<string>();
                 Item item = ((ItemRepository)_repository.Items).Get(itemID);
-                InitProperties(item.ItemBatchNo ?? 10101);
+                InitProperties(item.Number);
                 // Get the next sequence number. Cannot do a count. Need to retrieve max number
                 int start = (item.Photos.Max(p => p.Sequence)) + 1;
                 int seq = start;
                 if (ModelState.IsValid)
                 {
-                    IWebHostEnvironment host;
                     foreach (IFormFile file in files)
                     {
                         if (file.Length > 0)
@@ -58,7 +68,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                             // Make sure the file is an image file
                             // Generate new name
                             inputFileName = String.Format("{0}-{1:D2}.jpg", item.Number, seq);
-                            serverSavePath = Path.Combine(hostEnv.WebRootPath, "NewPics" + inputFileName);
+                            serverSavePath = Path.Combine(hostEnv.ContentRootPath, "NewPics" + inputFileName);
                             //Save file to server folder
                             using (FileStream stream = new FileStream(serverSavePath, FileMode.Create))
                             {
@@ -70,8 +80,8 @@ namespace RickApps.UploadFilesMVC.Controllers
                             newImage.ItemID = item.ItemID;
                             newImage.Sequence = seq;
                             newImage.LinkToLargeImage = Path.Combine(ServerDestinationPath, inputFileName);
-                            newImage.LinkToMediumImage = Path.Combine(ServerDestinationPath, String.Format("272\\{0}-{1:D2}w272.jpg", item.Number, seq));
-                            newImage.LinkToSmallImage = Path.Combine(ServerDestinationPath, String.Format("128\\{0}-{1:D2}w128.jpg", item.Number, seq));
+                            newImage.LinkToMediumImage = Path.Combine(ServerDestinationPath, "medium", inputFileName);
+                            newImage.LinkToSmallImage = Path.Combine(ServerDestinationPath, "thumb", inputFileName);
                             item.Photos.Add(newImage);
                             seq++;
                         }
@@ -99,8 +109,8 @@ namespace RickApps.UploadFilesMVC.Controllers
         private int ResizePhotos(ICollection<string> newPics)
         {
             //Determine where everything is
-            string sourcePath = Server.MapPath("\\newpics\\");
-            string destPath = Server.MapPath(ServerDestinationPath);
+            string sourcePath = Path.Combine(hostEnv.ContentRootPath, "\\newpics\\");
+            string destPath = ServerDestinationPath;
             string procFile = "unknown";
             int count = 0;
 
@@ -110,31 +120,28 @@ namespace RickApps.UploadFilesMVC.Controllers
                 if (!Directory.Exists(destPath)) Directory.CreateDirectory(destPath);
 
                 //Create sub folders to hold the three picture sizes
-                if (!Directory.Exists(destPath + "048")) Directory.CreateDirectory(destPath + "048");
-                if (!Directory.Exists(destPath + "128")) Directory.CreateDirectory(destPath + "128");
-                if (!Directory.Exists(destPath + "272")) System.IO.Directory.CreateDirectory(destPath + "272");
+               if (!Directory.Exists(destPath + "medium")) Directory.CreateDirectory(destPath + "medium");
+                if (!Directory.Exists(destPath + "thumb")) System.IO.Directory.CreateDirectory(destPath + "thumb");
 
                 // Loop through the list of files to be resized
-                System.Drawing.Image fullSizeImg;
                 TempData["message"] = "Images resized.";  // Gets overwritten if we have an exception
                 foreach (var s in newPics)
                 {
                     //Create a new name for our file. The name is based on the item number and sequence
                     string baseName = Path.GetFileNameWithoutExtension(s);
-                    fullSizeImg = System.Drawing.Image.FromFile(s);
-
-                    //Rename and copy the file to our destination path
-                    fullSizeImg.Save(destPath + baseName + ".jpg");
-                    //Create three new image sizes
-                    string saveName;
-                    saveName = Path.Combine("048", baseName + "w048.jpg");
-                    ResizeImage(fullSizeImg, destPath + saveName, 40);
-                    saveName = Path.Combine("128", baseName + "w128.jpg");
-                    ResizeImage(fullSizeImg, destPath + saveName, 108);
-                    saveName = Path.Combine("272", baseName + "w272.jpg");
-                    ResizeImage(fullSizeImg, destPath + saveName, 377);
-                    count++;
-                    fullSizeImg.Dispose();
+                    // Copy and rename the file to our destination folder
+                    System.IO.File.Copy(s, destPath + baseName + ".jpg");
+                    using (FileStream fullSizeImg = new FileStream(s, FileMode.Open, FileAccess.Read))
+                    {
+                        //Create three new image sizes
+                        string saveName;
+                        saveName = Path.Combine("thumb", baseName + ".jpg");
+                        ResizeImage(fullSizeImg, destPath + saveName, 128);
+                        saveName = Path.Combine("medium", baseName + ".jpg");
+                        ResizeImage(fullSizeImg, destPath + saveName, 377);
+                        count++;
+                        fullSizeImg.Dispose();
+                    }
                 }
             }
             catch (OutOfMemoryException ex)
@@ -148,56 +155,32 @@ namespace RickApps.UploadFilesMVC.Controllers
             return count;
         }
 
+#pragma warning disable CA1416 // Validate platform compatibility
         /// <summary>
-        /// Usage: photo/dothumbs/?ItemNo=12345&BatchNo=bhYMMDD
-        /// This is here for legacy access system
+        /// Resize an image to a specified width. Aspect ratio is preserved.
+        /// The source image is not altered.
+        /// This will work if hosted on Windows. Not tried on other platforms.
         /// </summary>
-        public ActionResult DoThumbs(string ItemNo, string BatchNo)
-        {
-            // Make sure we got two values
-            if (String.IsNullOrWhiteSpace(ItemNo) || String.IsNullOrWhiteSpace(BatchNo))
-            {
-                TempData["message"] = "Incorrect call";
-                return View();
-            }
-            if (BatchNo.Length != 7)
-            {
-                TempData["message"] = "Bad batch number";
-                return View();
-            }
-            //ResizePhotos(ItemNo);
-
-            return View();
-        }
-
-        private bool ThumbnailCallback()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Resize the image to one of three predetermined sizes
-        /// </summary>
-        /// <param name="img"></param>
+        /// <param name="pngStream"></param>
         /// <param name="saveName"></param>
-        /// <param name="imgSize"></param>
-        private void ResizeImage(System.Drawing.Image img, string saveName, int imgSize)
+        /// <param name="imgWidth"></param>
+        private void ResizeImage(FileStream pngStream, string saveName, int imgWidth)
         {
-            Image sizedImage;
-            Image.GetThumbnailImageAbort myCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
-            // Calculate the new height of the image given its desired width
-            int height = img.Height * imgSize / img.Width;
-            sizedImage = img.GetThumbnailImage(imgSize, height, myCallback, IntPtr.Zero);
-            sizedImage.Save(saveName);
+            using (var image = new Bitmap(pngStream))
+            {
+                // Calculate the new height of the image given its desired width
+                int height = (int)Math.Round(image.Height * (imgWidth / (float)image.Width));
+                var resized = new Bitmap(imgWidth, height);
+                using (var graphics = Graphics.FromImage(resized))
+                {
+                    graphics.CompositingQuality = CompositingQuality.HighSpeed;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.CompositingMode = CompositingMode.SourceCopy;
+                    graphics.DrawImage(image, 0, 0, imgWidth, height);
+                    resized.Save(saveName, ImageFormat.Jpeg);
+                }
+            }
         }
-
-        private void ResizeImage(string source, string saveName, int imgWidth)
-        {
-            WebImage myImage = new WebImage(source);
-            // Calculate the new height of the image given its desired width
-            int height = (int)Math.Round(myImage.Height * (imgWidth / (float)myImage.Width));
-            myImage.Resize(imgWidth, height, true, true);
-            myImage.Save(saveName);
-        }
+#pragma warning restore CA1416 // Validate platform compatibility
     }
 }
