@@ -57,7 +57,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                 Item item = ((ItemRepository)_repository.Items).Get(itemID);
                 InitProperties(item.Number);
                 // Get the next sequence number. Cannot do a count. Need to retrieve max number
-                int start = (item.Photos.Max(p => p.Sequence)) + 1;
+                int start = item.Photo.Count > 0 ? (item.Photo.Max(p=>p.Sequence)) + 1 : 1;
                 int seq = start;
                 if (ModelState.IsValid)
                 {
@@ -68,7 +68,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                             // Make sure the file is an image file
                             // Generate new name
                             inputFileName = String.Format("{0}-{1:D2}.jpg", item.Number, seq);
-                            serverSavePath = Path.Combine(hostEnv.ContentRootPath, "NewPics" + inputFileName);
+                            serverSavePath = Path.Combine(hostEnv.ContentRootPath, "Uploads",  inputFileName);
                             //Save file to server folder
                             using (FileStream stream = new FileStream(serverSavePath, FileMode.Create))
                             {
@@ -82,7 +82,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                             newImage.LinkToLargeImage = Path.Combine(ServerDestinationPath, inputFileName);
                             newImage.LinkToMediumImage = Path.Combine(ServerDestinationPath, "medium", inputFileName);
                             newImage.LinkToSmallImage = Path.Combine(ServerDestinationPath, "thumb", inputFileName);
-                            item.Photos.Add(newImage);
+                            item.Photo.Add(newImage);
                             seq++;
                         }
                         _repository.Complete();

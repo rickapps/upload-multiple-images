@@ -10,11 +10,11 @@ namespace RickApps.UploadFilesMVC.Models
         Active,
         Sold
     }
-    public class Item
+    public partial class Item
     {
         public Item()
         {
-            this.Photos = new HashSet<Photo>();
+            this.Photo = new HashSet<Photo>();
         }
         public int ItemID { get; set; }
 
@@ -29,7 +29,7 @@ namespace RickApps.UploadFilesMVC.Models
 
         public ItemListingStatus Status { get; set; }
 
-        public virtual ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<Photo> Photo { get; set; }
 
         public string FormattedPrice
         {

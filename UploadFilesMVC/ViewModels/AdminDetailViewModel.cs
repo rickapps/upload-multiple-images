@@ -63,7 +63,7 @@ namespace RickApps.MVCWebsite.ViewModels
 
         public IEnumerable<Photo> ItemImages
         {
-            get { return _item.Photos; }
+            get { return _item.Photo; }
         }
     }
 }

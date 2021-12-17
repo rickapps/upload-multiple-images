@@ -13,5 +13,6 @@ namespace RickApps.UploadFilesMVC.Models
         public string LinkToLargeImage { get; set; }
         public string LinkToMediumImage { get; set; }
         public string LinkToSmallImage { get; set; }
+        public virtual Item Item { get; set; }
     }
 }
