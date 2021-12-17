@@ -53,7 +53,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                 item = new Item();
             }
             AdminDetailViewModel vm = new AdminDetailViewModel(item);
-            vm.ItemStatusList = new SelectList(((ItemRepository)_repository.Items).ItemStatusList, "Value", "Key", item.Status);
+            vm.ItemStatusList = new SelectList(((ItemRepository)_repository.Items).ItemStatusList, "Key", "Value", item.Status);
             vm.ShowPhoto = isPhoto;
             return View("Detail", vm);
         }
@@ -65,7 +65,7 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <param name="collection"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(int itemID, FormCollection collection)
+        public ActionResult Edit(int itemID, IFormCollection collection)
         {
             Item item = null;
             ItemListingStatus initStatus;
@@ -77,9 +77,9 @@ namespace RickApps.UploadFilesMVC.Controllers
                     item = ((ItemRepository)_repository.Items).Get(itemID);
                     initStatus = item.Status;
                     item.Name = collection["Name"];
-                    item.Description = collection["ItemDescription"];
+                    item.Description = collection["Description"];
                     item.Price = decimal.Parse(collection["ItemPrice"]);
-                    if (Enum.TryParse<ItemListingStatus>(collection["ItemStatus"], out newStatus))
+                    if (Enum.TryParse<ItemListingStatus>(collection["Status"], out newStatus))
                         item.Status = newStatus;
 
                     _repository.Complete();

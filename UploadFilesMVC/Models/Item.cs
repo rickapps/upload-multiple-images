@@ -12,6 +12,10 @@ namespace RickApps.UploadFilesMVC.Models
     }
     public class Item
     {
+        public Item()
+        {
+            this.Photos = new HashSet<Photo>();
+        }
         public int ItemID { get; set; }
 
         public int Number { get; set; }

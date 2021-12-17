@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using RickApps.UploadFilesMVC.Data;
 using RickApps.UploadFilesMVC.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RickApps.MVCWebsite.ViewModels
 {
@@ -33,7 +30,17 @@ namespace RickApps.MVCWebsite.ViewModels
             }
         }
 
-        public int Number { get; set; }
+        public int Number 
+        { 
+            get { return _item.Number; } 
+            set { _item.Number = value; } 
+        }
+
+        public string Name
+        {
+            get { return _item.Name; }
+            set { _item.Name = value; }
+        }
 
         public decimal ItemPrice
         {
@@ -42,9 +49,17 @@ namespace RickApps.MVCWebsite.ViewModels
             set { _item.Price = value; }
         }
 
-        public string Description { get; set; }
+        public string Description 
+        {
+            get { return _item.Description; } 
+            set { _item.Description = value; }
+        }
 
-        public ItemListingStatus ItemStatus { get; set; }
+        public ItemListingStatus Status 
+        { 
+            get { return _item.Status; } 
+            set { _item.Status = value; } 
+        }
 
         public IEnumerable<Photo> ItemImages
         {

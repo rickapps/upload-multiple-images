@@ -1,5 +1,101 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RickApps.MVCWebsite.ViewModels.AdminDetailViewModel
 @{
+    ViewBag.Title = "Edit Item";
 }
+
+<div class="container">
+    <section class="page-start container">
+        <header class="mb-5">
+            <h1 class="heading-line">@String.Format("Edit Item #{0}", Model.Number)</h1>
+        </header>
+    </section>
+
+    @{
+        var detailTab = "active show";
+        var photoTab = "";
+        if (Model.ShowPhoto)
+        {
+            detailTab = "";
+            photoTab = "active show";
+        }
+     }
+    <section class="item-details page-start p-b-small">
+        <ul class="nav nav-tabs" id="detailCards" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @detailTab" id="detail-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @photoTab" id="image-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="true">Photos</a>
+            </li>
+         </ul>
+        <div class="tab-content" id="itemTabContent">
+            <div class="card tab-pane fade show @detailTab" id="details" role="tabpanel" aria-labelledby="detail-tab">
+                @using (Html.BeginForm())
+                {
+                    <div class="card-block">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ItemID)
+                        @Html.HiddenFor(m => m.Number)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Enter a name for the item", required = "required" })
+                            @Html.ValidationMessageFor(m => m.Name, String.Empty, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Enter a description", rows = "6", required = "required" })
+                            @Html.ValidationMessageFor(m => m.Description, String.Empty, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ItemPrice, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.ItemPrice, new { @class = "form-control", placeholder = "Enter a price", required = "required" })
+                            @Html.ValidationMessageFor(m => m.ItemPrice, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Status, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Status, Model.ItemStatusList, new { Class = "filter-nameselect form-control", required = "required" })
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        @Html.ActionLink("Cancel and return to List", "Index", null, new { ItemStatus = Model.OrigStatus }, new { @class = "btn btn-default" })
+                    </div>
+                }
+            </div>
+            <div class="card tab-pane fade @photoTab" id="images" role="tabpanel" aria-labelledby="image-tab">
+                <div class="card-block items">
+                    <div class="row">
+                        @foreach (Photo image in Model.ItemImages)
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="item text-center">
+                                    <div class="product-image">
+                                        @{ var myUrl = String.Format("{0}", image.LinkToMediumImage); }
+                                        <img src=@myUrl height="142" alt="ring">
+                                        <a href=@Url.Action("DeleteImage", "Photo", new { itemID = Model.ItemID, imageID = image.PhotoID })>
+                                            <i class="fa fa-close"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+                @using (Html.BeginForm("UploadFiles", "Photo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="card-footer">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ItemID)
+                        <!-- Note that the onchange event could be blocked. Some browsers do not allow form to be submitted using javascript. -->
+                        <input type="file" multiple style="display: none;" id="files" name="files" onchange="this.form.submit();" />
+                        <input type="button" value="Upload..." class="btn btn-primary" onclick="document.getElementById('files').click();" />
+                        @Html.ActionLink("Cancel and return to List", "Index", null, new { ItemStatus = Model.OrigStatus }, new { @class = "btn btn-default" })
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</div>
+
