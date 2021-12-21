@@ -27,8 +27,8 @@ namespace RickApps.UploadFilesMVC.Controllers
         // GET: Items
         public IActionResult Index()
         {
-            IEnumerable<Item> list = _repository.Items.GetAll();
-            return View(list);
+            //IEnumerable<Item> list = _repository.Items.GetAll();
+            return View();
         }
         //public async Task<IActionResult> Index()
         //{
@@ -96,9 +96,9 @@ namespace RickApps.UploadFilesMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ItemID,Name,Description,Price")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Description,Price")] Item item)
         {
-            if (id != item.ItemID)
+            if (id != item.ID)
             {
                 return NotFound();
             }

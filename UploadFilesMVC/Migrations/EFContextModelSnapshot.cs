@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RickApps.UploadFilesMVC.Data;
 
@@ -12,25 +11,24 @@ using RickApps.UploadFilesMVC.Data;
 namespace RickApps.UploadFilesMVC.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20211217021709_Working")]
-    partial class Working
+    partial class EFContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("RickApps.UploadFilesMVC.Models.Item", b =>
                 {
-                    b.Property<int>("ItemID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -47,18 +45,18 @@ namespace RickApps.UploadFilesMVC.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.HasKey("ItemID");
+                    b.HasKey("ID");
 
                     b.ToTable("Item");
                 });
 
             modelBuilder.Entity("RickApps.UploadFilesMVC.Models.Photo", b =>
                 {
-                    b.Property<int>("PhotoID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhotoID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("ItemID")
                         .HasColumnType("int");
@@ -75,7 +73,7 @@ namespace RickApps.UploadFilesMVC.Migrations
                     b.Property<int>("Sequence")
                         .HasColumnType("int");
 
-                    b.HasKey("PhotoID");
+                    b.HasKey("ID");
 
                     b.HasIndex("ItemID");
 
@@ -85,7 +83,7 @@ namespace RickApps.UploadFilesMVC.Migrations
             modelBuilder.Entity("RickApps.UploadFilesMVC.Models.Photo", b =>
                 {
                     b.HasOne("RickApps.UploadFilesMVC.Models.Item", "Item")
-                        .WithMany("Photo")
+                        .WithMany("Photos")
                         .HasForeignKey("ItemID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -95,7 +93,7 @@ namespace RickApps.UploadFilesMVC.Migrations
 
             modelBuilder.Entity("RickApps.UploadFilesMVC.Models.Item", b =>
                 {
-                    b.Navigation("Photo");
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

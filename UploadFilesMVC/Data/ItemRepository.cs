@@ -1,4 +1,5 @@
-﻿using RickApps.UploadFilesMVC.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using RickApps.UploadFilesMVC.Interfaces;
 using RickApps.UploadFilesMVC.Models;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,32 @@ namespace RickApps.UploadFilesMVC.Data
             return item;
         }
 
+        /// <summary>
+        /// This is different from Get() in the base class because
+        /// it also obtains the photo collection for the specified
+        /// item.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Item GetItem(int id)
+        {
+            var item = _entity.Single(i => i.ID == id);
+            // Populate the photo collection. Lazy loading is not
+            // turned on so we have to do it explicitly. When you
+            // read up on eager, lazy, and explicit loading, make
+            // sure you are reading about EF Core, not just EF.
+            Context.Entry(item).Collection(p => p.Photos).Load();
+            return item;
+        }
+
         public IEnumerable<Item> GetAdminItems(ItemListingStatus status)
         {
-            IQueryable<Item> itemList = Context.Set<Item>();
-            itemList = itemList.Where(p => p.Status == status);
+            var itemList = _entity.Where(p => p.Status == status);
 
             return itemList.OrderByDescending(p => p.Number);
         }
+
+        
 
         /// <summary>
         /// Use to populate dropdown

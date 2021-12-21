@@ -4,7 +4,7 @@
 
 namespace RickApps.UploadFilesMVC.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,35 +12,39 @@ namespace RickApps.UploadFilesMVC.Migrations
                 name: "Item",
                 columns: table => new
                 {
-                    ItemID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Item", x => x.ItemID);
+                    table.PrimaryKey("PK_Item", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Photo",
                 columns: table => new
                 {
-                    PhotoID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemID = table.Column<int>(type: "int", nullable: false),
                     Sequence = table.Column<int>(type: "int", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    LinkToLargeImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkToMediumImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkToSmallImage = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Photo", x => x.PhotoID);
+                    table.PrimaryKey("PK_Photo", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Photo_Item_ItemID",
                         column: x => x.ItemID,
                         principalTable: "Item",
-                        principalColumn: "ItemID",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 

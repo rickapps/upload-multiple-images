@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using RickApps.UploadFilesMVC.Data;
 using RickApps.UploadFilesMVC.Interfaces;
 
@@ -24,8 +25,11 @@ namespace RickApps.UploadFilesMVC
             services.AddControllersWithViews();
 
             services.AddDbContext<EFContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("RickAppsUploadFilesMVCContext")));
-            
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("RickAppsUploadFilesMVCContext"));
+                options.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
+            });
+
             // Add our unit of work to manage all our repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

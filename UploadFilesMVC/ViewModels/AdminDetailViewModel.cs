@@ -13,6 +13,10 @@ namespace RickApps.MVCWebsite.ViewModels
             _item = item;
             OrigStatus = _item.Status;
             ShowPhoto = false;
+            foreach (var image in _item.Photos)
+            {
+                continue;
+            }
         }
 
         public IEnumerable<SelectListItem> ItemStatusList { get; set; }
@@ -26,7 +30,7 @@ namespace RickApps.MVCWebsite.ViewModels
         {
             get
             {
-                return (int)_item.ItemID;
+                return (int)_item.ID;
             }
         }
 
@@ -63,7 +67,7 @@ namespace RickApps.MVCWebsite.ViewModels
 
         public IEnumerable<Photo> ItemImages
         {
-            get { return _item.Photo; }
+            get { return _item.Photos; }
         }
     }
 }

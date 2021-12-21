@@ -36,6 +36,10 @@ namespace RickApps.UploadFilesMVC.Controllers
             // But seriously, you really might want to obtain all your data from a repository for larger projects.
             vm.StatusList = new SelectList(((ItemRepository)_repository.Items).ItemStatusList, "Key", "Value", Status);
             vm.Status = Status;
+            // Now we get all the items that have the specified status. Note that EF core does not do lazy loading
+            // by default. This means we obtain a collection of items without their photos. You can change this in
+            // the repository call to GetAdminItems by adding .include(p => p.Photos) to the query string. Alternatively, 
+            // you could activate ILazyLoader service globally.
             vm.Items = ((ItemRepository)_repository.Items).GetAdminItems(Status);
             return View(vm);
         }
@@ -47,7 +51,8 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <returns></returns>
         public ActionResult Edit(int itemID, bool isPhoto = false)
         {
-            Item item = ((ItemRepository)_repository.Items).Get(itemID);
+            // Get the item along with its photo collection.
+            Item item = ((ItemRepository)_repository.Items).GetItem(itemID);
             if (item == null)
             {
                 item = new Item();
@@ -74,7 +79,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    item = ((ItemRepository)_repository.Items).Get(itemID);
+                    item = ((ItemRepository)_repository.Items).GetItem(itemID);
                     initStatus = item.Status;
                     item.Name = collection["Name"];
                     item.Description = collection["Description"];
@@ -119,7 +124,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             ItemListingStatus initStatus = ItemListingStatus.Active;
             try
             {
-                item = ((ItemRepository)_repository.Items).Get(itemID);
+                item = ((ItemRepository)_repository.Items).GetItem(itemID);
                 initStatus = item.Status;
                 item.Status = ItemListingStatus.Sold;
                 _repository.Complete();
@@ -144,7 +149,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             ItemListingStatus initStatus = ItemListingStatus.Active;
             try
             {
-                Item item = ((ItemRepository)_repository.Items).Get(itemID);
+                Item item = ((ItemRepository)_repository.Items).GetItem(itemID);
                 int Number = item.Number;
                 initStatus = item.Status;
                 _repository.Items.Remove(item);

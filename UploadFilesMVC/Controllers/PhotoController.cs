@@ -39,7 +39,7 @@ namespace RickApps.UploadFilesMVC.Controllers
 
         public RedirectToActionResult DeleteImage(int itemID, int imageID)
         {
-            Photo image = ((PhotoRepository)_repository.ItemPhotos).GetItemImages(itemID).SingleOrDefault(p => p.PhotoID == imageID);
+            Photo image = ((PhotoRepository)_repository.ItemPhotos).GetItemImages(itemID).SingleOrDefault(p => p.ID == imageID);
             ((PhotoRepository)_repository.ItemPhotos).Remove(image);
             _repository.Complete();
 
@@ -54,10 +54,10 @@ namespace RickApps.UploadFilesMVC.Controllers
                 string inputFileName;
                 string serverSavePath;
                 List<string> newPics = new List<string>();
-                Item item = ((ItemRepository)_repository.Items).Get(itemID);
+                Item item = ((ItemRepository)_repository.Items).GetItem(itemID);
                 InitProperties(item.Number);
                 // Get the next sequence number. Cannot do a count. Need to retrieve max number
-                int start = item.Photo.Count > 0 ? (item.Photo.Max(p=>p.Sequence)) + 1 : 1;
+                int start = item.Photos.Count > 0 ? (item.Photos.Max(p=>p.Sequence)) + 1 : 1;
                 int seq = start;
                 if (ModelState.IsValid)
                 {
@@ -77,12 +77,12 @@ namespace RickApps.UploadFilesMVC.Controllers
                             }
                             // Add the item to the database
                             Photo newImage = new Photo();
-                            newImage.ItemID = item.ItemID;
+                            newImage.ItemID = item.ID;
                             newImage.Sequence = seq;
                             newImage.LinkToLargeImage = Path.Combine(ServerDestinationPath, inputFileName);
                             newImage.LinkToMediumImage = Path.Combine(ServerDestinationPath, "medium", inputFileName);
                             newImage.LinkToSmallImage = Path.Combine(ServerDestinationPath, "thumb", inputFileName);
-                            item.Photo.Add(newImage);
+                            item.Photos.Add(newImage);
                             seq++;
                         }
                         _repository.Complete();
