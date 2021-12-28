@@ -47,12 +47,13 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <summary>
         /// Display the item we wish to edit
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="ID">Item id</param>
+        /// <param name="isPhoto">If true we make photo tab active</param>
         /// <returns></returns>
-        public ActionResult Edit(int itemID, bool isPhoto = false)
+        public ActionResult Edit(int ID, bool isPhoto = false)
         {
             // Get the item along with its photo collection.
-            Item item = ((ItemRepository)_repository.Items).GetItem(itemID);
+            Item item = ((ItemRepository)_repository.Items).GetItem(ID);
             if (item == null)
             {
                 item = new Item();

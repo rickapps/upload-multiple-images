@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>RickApps.UploadFilesMVC</RootNamespace>
+    <UserSecretsId>15488d02-46b8-48a5-bf7a-37c960c65428</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

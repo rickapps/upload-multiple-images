@@ -33,7 +33,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             int leftmost = Number / 100;
             // Make the folder name be at least five characters long
             string folderName = string.Format("{0:00000}", leftmost);
-            ServerDestinationPath = Path.Combine(hostEnv.WebRootPath, "\\pics\\", folderName);
+            ServerDestinationPath = Path.Join("pics\\", folderName);
             return;
         }
 
@@ -53,7 +53,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             {
                 string inputFileName;
                 string serverSavePath;
-                List<string> newPics = new List<string>();
+                List<string> uploadedFiles = new List<string>(); 
                 Item item = ((ItemRepository)_repository.Items).GetItem(itemID);
                 InitProperties(item.Number);
                 // Get the next sequence number. Cannot do a count. Need to retrieve max number
@@ -63,19 +63,25 @@ namespace RickApps.UploadFilesMVC.Controllers
                 {
                     foreach (IFormFile file in files)
                     {
-                        if (file.Length > 0)
+                        // Make sure file is within valid size
+                        if (file.Length > 0 && file.Length < 4000000)  // About 4MB
                         {
-                            // Make sure the file is an image file
-                            // Generate new name
+                            // Check file extension to make sure it is allowed.
+                            // Generate a name for the uploaded file. Don't keep original name
                             inputFileName = String.Format("{0}-{1:D2}.jpg", item.Number, seq);
-                            serverSavePath = Path.Combine(hostEnv.ContentRootPath, "Uploads",  inputFileName);
-                            //Save file to server folder
+                            // We don't know much about the uploaded file. Store it outside of our website
+                            serverSavePath = Path.Combine(Path.GetTempPath(),  inputFileName);
+                            // Write the uploaded file to serverSavePath. We know it is within our
+                            // valid size range and has acceptable extension.
                             using (FileStream stream = new FileStream(serverSavePath, FileMode.Create))
                             {
                                 file.CopyTo(stream);
-                                newPics.Add(serverSavePath);
+                                // Make a list of all files that have been uploaded. The user can select more
+                                // than one file at a time.
+                                uploadedFiles.Add(serverSavePath);
                             }
-                            // Add the item to the database
+                            // We have not made copies of the uploaded files yet, but we are going to update our model.
+                            // We can always not commit changes to db if the files don't copy.
                             Photo newImage = new Photo();
                             newImage.ItemID = item.ID;
                             newImage.Sequence = seq;
@@ -85,12 +91,18 @@ namespace RickApps.UploadFilesMVC.Controllers
                             item.Photos.Add(newImage);
                             seq++;
                         }
-                        _repository.Complete();
+                        else
+                        {
+                            // ignore the file. If you were a good programmer, you would tell the user why.
+                            continue;
+                        }
                     }
-                    // Resize the images. We generate a batch number to deal with legacy code from Access system
-                     int numPhotos = ResizePhotos(newPics);
+                    // Resize the images. 
+                    int numPhotos = ResizePhotos(uploadedFiles, item);
+                    // All went well, save to the database
+                    _repository.Complete();
                     // Delete the original uploaded files
-                    foreach (string s in newPics)
+                    foreach (string s in uploadedFiles)
                         System.IO.File.Delete(s);
                 }
             }
@@ -106,39 +118,47 @@ namespace RickApps.UploadFilesMVC.Controllers
             return RedirectToAction("Edit", "Admin", new { ItemID = itemID, isPhoto = true });
         }
 
-        private int ResizePhotos(ICollection<string> newPics)
+        /// <summary>
+        /// Make copies of the uploaded photos, resize them, and store
+        /// to a location accessible to the website.
+        /// </summary>
+        /// <param name="newPics"></param>
+        /// <returns></returns>
+        private int ResizePhotos(ICollection<string> newPics, Item item)
         {
-            //Determine where everything is
-            string sourcePath = Path.Combine(hostEnv.ContentRootPath, "\\newpics\\");
-            string destPath = ServerDestinationPath;
-            string procFile = "unknown";
             int count = 0;
+            if (newPics.Count() == 0) return count;
+
+            //Determine where we should put stuff
+            string largePath = Path.Join(hostEnv.ContentRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToLargeImage));
+            string mediumPath = Path.Join(hostEnv.ContentRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToMediumImage));
+            string thumbPath = Path.Join(hostEnv.ContentRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToSmallImage));
+            string procFile = "unknown";
 
             try
             {
                 //Do we need to create our destination folder?
-                if (!Directory.Exists(destPath)) Directory.CreateDirectory(destPath);
-
+                if (!Directory.Exists(largePath)) Directory.CreateDirectory(largePath);
                 //Create sub folders to hold the three picture sizes
-               if (!Directory.Exists(destPath + "medium")) Directory.CreateDirectory(destPath + "medium");
-                if (!Directory.Exists(destPath + "thumb")) System.IO.Directory.CreateDirectory(destPath + "thumb");
+                if (!Directory.Exists(mediumPath)) Directory.CreateDirectory(mediumPath);
+                if (!Directory.Exists(thumbPath)) Directory.CreateDirectory(thumbPath);
 
                 // Loop through the list of files to be resized
                 TempData["message"] = "Images resized.";  // Gets overwritten if we have an exception
                 foreach (var s in newPics)
                 {
                     //Create a new name for our file. The name is based on the item number and sequence
-                    string baseName = Path.GetFileNameWithoutExtension(s);
+                    string baseName = Path.GetFileName(s);
                     // Copy and rename the file to our destination folder
-                    System.IO.File.Copy(s, destPath + baseName + ".jpg");
+                    System.IO.File.Copy(s, Path.Join(largePath, baseName));
                     using (FileStream fullSizeImg = new FileStream(s, FileMode.Open, FileAccess.Read))
                     {
-                        //Create three new image sizes
+                        //Create two new image sizes
                         string saveName;
-                        saveName = Path.Combine("thumb", baseName + ".jpg");
-                        ResizeImage(fullSizeImg, destPath + saveName, 128);
-                        saveName = Path.Combine("medium", baseName + ".jpg");
-                        ResizeImage(fullSizeImg, destPath + saveName, 377);
+                        saveName = Path.Combine(thumbPath, baseName);
+                        ResizeImage(fullSizeImg, saveName, 128);
+                        saveName = Path.Combine(mediumPath, baseName);
+                        ResizeImage(fullSizeImg, saveName, 377);
                         count++;
                         fullSizeImg.Dispose();
                     }

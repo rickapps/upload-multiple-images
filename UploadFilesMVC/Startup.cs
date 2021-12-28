@@ -26,7 +26,7 @@ namespace RickApps.UploadFilesMVC
 
             services.AddDbContext<EFContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("RickAppsUploadFilesMVCContext"));
+                options.UseSqlServer(Configuration.GetConnectionString("AzureMVCUploadContext"));
                 options.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
             });
 
@@ -47,7 +47,7 @@ namespace RickApps.UploadFilesMVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

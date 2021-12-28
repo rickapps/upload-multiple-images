@@ -40,7 +40,9 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr class="row m-2">
-                                <td class="d-inline-block col-md-2 col-4">@Html.ActionLink(item.Number.ToString(), "Edit", "Admin", "https", null, null, new { itemID = item.ID }, null)</td>
+                                <td class="d-inline-block col-md-2 col-4"><a asp-controller="Admin"
+                                                                             asp-action="Edit"
+                                                                             asp-route-id="@item.ID">@item.Number</a></td>
                                 <td class="d-inline-block col-md-6 hidden-md-down">@item.Name</td>
                                 <td class="d-inline-block col-md-2 col-4">@item.FormattedPrice</td>
                                 <td class="d-inline-block col-md-2 col-4">
