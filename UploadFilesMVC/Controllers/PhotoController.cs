@@ -33,17 +33,17 @@ namespace RickApps.UploadFilesMVC.Controllers
             int leftmost = Number / 100;
             // Make the folder name be at least five characters long
             string folderName = string.Format("{0:00000}", leftmost);
-            ServerDestinationPath = Path.Join("pics\\", folderName);
+            ServerDestinationPath = Path.Join("\\pics\\", folderName);
             return;
         }
 
-        public RedirectToActionResult DeleteImage(int itemID, int imageID)
+        public RedirectToActionResult DeleteImage(int ID, int imageID)
         {
-            Photo image = ((PhotoRepository)_repository.ItemPhotos).GetItemImages(itemID).SingleOrDefault(p => p.ID == imageID);
+            Photo image = ((PhotoRepository)_repository.ItemPhotos).GetItemImages(ID).SingleOrDefault(p => p.ID == imageID);
             ((PhotoRepository)_repository.ItemPhotos).Remove(image);
             _repository.Complete();
 
-            return RedirectToAction("Edit", "Admin", new { ItemID = itemID, isPhoto = true });
+            return RedirectToAction("Edit", "Admin", new { ID = ID, isPhoto = true });
         }
 
         [HttpPost]
@@ -115,7 +115,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             {
                 throw ex;
             }
-            return RedirectToAction("Edit", "Admin", new { ItemID = itemID, isPhoto = true });
+            return RedirectToAction("Edit", "Admin", new { ID = itemID, isPhoto = true });
         }
 
         /// <summary>
@@ -130,9 +130,9 @@ namespace RickApps.UploadFilesMVC.Controllers
             if (newPics.Count() == 0) return count;
 
             //Determine where we should put stuff
-            string largePath = Path.Join(hostEnv.ContentRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToLargeImage));
-            string mediumPath = Path.Join(hostEnv.ContentRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToMediumImage));
-            string thumbPath = Path.Join(hostEnv.ContentRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToSmallImage));
+            string largePath = Path.Join(hostEnv.WebRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToLargeImage));
+            string mediumPath = Path.Join(hostEnv.WebRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToMediumImage));
+            string thumbPath = Path.Join(hostEnv.WebRootPath, Path.GetDirectoryName(item.Photos.First<Photo>().LinkToSmallImage));
             string procFile = "unknown";
 
             try
