@@ -1,0 +1,1 @@
+﻿Uploaded images are stored here. Items are sorted into folders based on the item number. Three sizes of each uploaded image are stored - Original, medium, and thumbnail.
