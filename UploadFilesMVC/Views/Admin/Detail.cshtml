@@ -74,7 +74,7 @@
                                         @{ var myUrl = String.Format("{0}", image.LinkToMediumImage); }
                                         <img src=@myUrl height="142" alt="ring">
                                         <a href=@Url.Action("DeleteImage", "Photo", new { itemID = Model.ItemID, imageID = image.ID })>
-                                            <i class="fa fa-close"></i>
+                                            <i class="fas fa-times-circle"></i>
                                         </a>
                                     </div>
                                 </div>
