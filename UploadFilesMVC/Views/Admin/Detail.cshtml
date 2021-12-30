@@ -59,7 +59,7 @@
 
                     <div class="card-footer">
                         <input type="submit" value="Save" class="btn btn-primary" />
-                        @Html.ActionLink("Cancel and return to List", "Index", null, new { ItemStatus = Model.OrigStatus }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Cancel and return to List", "Index", null, new { Status=Model.OrigStatus }, new { @class = "btn btn-default" })
                     </div>
                 }
             </div>
@@ -73,7 +73,7 @@
                                     <div class="product-image">
                                         @{ var myUrl = String.Format("{0}", image.LinkToMediumImage); }
                                         <img src=@myUrl height="142" alt="ring">
-                                        <a href=@Url.Action("DeleteImage", "Photo", new { itemID = Model.ItemID, imageID = image.ID })>
+                                        <a href=@Url.Action("DeleteImage", "Photo", new { ID = Model.ItemID, imageID = image.ID })>
                                             <i class="fas fa-times-circle"></i>
                                         </a>
                                     </div>
@@ -91,7 +91,7 @@
                         <!-- Note that the onchange event could be blocked. Some browsers do not allow form to be submitted using javascript. -->
                         <input type="file" multiple style="display: none;" id="files" name="files" onchange="this.form.submit();" />
                         <input type="button" value="Upload..." class="btn btn-primary" onclick="document.getElementById('files').click();" />
-                        @Html.ActionLink("Cancel and return to List", "Index", null, new { ItemStatus = Model.OrigStatus }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Cancel and return to List", "Index", null, new { Status=Model.OrigStatus }, new { @class = "btn btn-default" })
                     </div>
                 }
             </div>

@@ -26,7 +26,7 @@ namespace RickApps.UploadFilesMVC
 
             services.AddDbContext<EFContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("AzureMVCUploadContext"));
+                options.UseSqlServer(Configuration.GetConnectionString("AzureMVCContext"));
                 options.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
             });
 
