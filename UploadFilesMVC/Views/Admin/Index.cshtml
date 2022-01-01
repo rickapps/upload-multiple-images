@@ -16,7 +16,7 @@
                     }
                 </div>
                 <div class="col filters d-flex float-right">
-                    @Html.ActionLink("Add New Item", "Create", "Admin", null, new { @class = "btn btn-unique" })
+                    @Html.ActionLink("Add New Item", "Create", "Admin", null, new { @class = "btn btn-danger btn-small btn-round" })
                 </div>
             </div>
         </header>
@@ -45,12 +45,25 @@
                                                                                     asp-route-id="@item.ID">@item.Name</a></td>
                                 <td class="d-inline-block col-md-2 col-4">@item.FormattedPrice</td>
                                 <td class="d-inline-block col-md-2 col-4">
-                                    @using (Html.BeginForm("Delete", "Admin"))
+                                    @if (Model.Status == ItemListingStatus.Active)
                                     {
-                                        @Html.Hidden("itemID", item.ID)
-                                        <input type="submit"
-                                                class="btn btn-default btn-xs"
-                                                value="Delete" />
+                                        using (Html.BeginForm("ArchiveItem", "Admin"))
+                                        {
+                                            @Html.Hidden("itemID", item.ID)
+                                            <input type="submit"
+                                                    class="btn btn-secondary btn-small btn-round"
+                                                    value="Archive" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (Html.BeginForm("Delete", "Admin"))
+                                        {
+                                            @Html.Hidden("itemID", item.ID)
+                                            <input type="submit"
+                                                    class="btn btn-warning btn-small btn-round"
+                                                    value="Delete" />
+                                        }
                                     }
                                 </td>
                             </tr>

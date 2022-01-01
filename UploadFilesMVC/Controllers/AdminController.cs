@@ -90,7 +90,7 @@ namespace RickApps.UploadFilesMVC.Controllers
 
                     _repository.Complete();
                     TempData["message"] = string.Format("Item {0} has been updated", item.Number);
-                    return RedirectToAction("Index", new { ItemStatus = initStatus });
+                    return RedirectToAction("Index", new { Status = initStatus });
                 }
             }
             catch (Exception ex)
@@ -123,7 +123,7 @@ namespace RickApps.UploadFilesMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult ArchiveItem(int itemID, FormCollection collection)
+        public ActionResult ArchiveItem(int itemID, IFormCollection collection)
         {
             Item item = null;
             ItemListingStatus initStatus = ItemListingStatus.Active;
@@ -134,7 +134,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                 item.Status = ItemListingStatus.Sold;
                 _repository.Complete();
                 TempData["message"] = string.Format("Item {0} is hidden from customers", item.Number);
-                return RedirectToAction("Index", new { ItemStatus = initStatus });
+                return RedirectToAction("Index", new { Status = initStatus });
             }
             catch (Exception ex)
             {
