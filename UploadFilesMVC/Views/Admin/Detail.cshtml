@@ -71,7 +71,7 @@
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="item text-center">
                                     <div class="product-image">
-                                        @{ var myUrl = String.Format("{0}", image.LinkToMediumImage); }
+                                        @{ var myUrl = String.Format("{0}", image.LinkToSmallImage); }
                                         <img src=@myUrl height="142" alt="ring">
                                         <a href=@Url.Action("DeleteImage", "Photo", new { ID = Model.ItemID, imageID = image.ID })>
                                             <i class="fas fa-times-circle"></i>

@@ -99,6 +99,10 @@ namespace RickApps.UploadFilesMVC.Controllers
             return View("Detail", new AdminDetailViewModel(item));
         }
 
+        /// <summary>
+        /// Create a new item and store it to the database.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             Item item;
@@ -115,7 +119,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             {
                 TempData["message"] = string.Format("Could not add new item.");
             }
-            return RedirectToAction("Index", new { ItemStatus = ItemListingStatus.Draft });
+            return RedirectToAction("Index", new { Status = ItemListingStatus.Draft });
         }
 
         [HttpPost]
@@ -160,7 +164,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             catch (Exception ex)
             {
             }
-            return RedirectToAction("Index", new { ItemStatus = initStatus });
+            return RedirectToAction("Index", new { Status = initStatus });
         }
     }
 }

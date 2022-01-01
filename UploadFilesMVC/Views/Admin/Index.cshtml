@@ -8,18 +8,15 @@
         <header mb-5>
             <h1 class="heading-line">Manage Listings</h1>
             <div class="row">
-                @if (Model.Status.Equals(ItemListingStatus.Draft))
-                {
-                <div class="col filters d-flex">
-                    @Html.ActionLink("Add New Item", "Create", "Admin", new { @class = "btn btn-unique" })
-                </div>
-                }
                 <div class="col filters d-flex">
                     @using (Html.BeginForm("Index", "Admin", FormMethod.Post, new { @class = "form-inline" }))
                     {
                         <label class="m-1" for="ItemStatus">Display: </label>
                                     @Html.DropDownListFor(vm => vm.Status, Model.StatusList, new { Class = "filter-nameselect form-control m-1", onchange = @"form.submit();" })
                     }
+                </div>
+                <div class="col filters d-flex float-right">
+                    @Html.ActionLink("Add New Item", "Create", "Admin", null, new { @class = "btn btn-unique" })
                 </div>
             </div>
         </header>
@@ -43,7 +40,9 @@
                                 <td class="d-inline-block col-md-2 col-4"><a asp-controller="Admin"
                                                                              asp-action="Edit"
                                                                              asp-route-id="@item.ID">@item.Number</a></td>
-                                <td class="d-inline-block col-md-6 hidden-md-down">@item.Name</td>
+                                <td class="d-inline-block col-md-6 hidden-md-down"><a asp-controller="Admin"
+                                                                                    asp-action="Edit"
+                                                                                    asp-route-id="@item.ID">@item.Name</a></td>
                                 <td class="d-inline-block col-md-2 col-4">@item.FormattedPrice</td>
                                 <td class="d-inline-block col-md-2 col-4">
                                     @using (Html.BeginForm("Delete", "Admin"))

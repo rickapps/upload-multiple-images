@@ -11,6 +11,7 @@ namespace RickApps.UploadFilesMVC.Data
     {
         public ItemRepository(EFContext context) : base(context)
         {
+            // Create our item status list for the drop downs.
             ItemStatusList = new Dictionary<ItemListingStatus, string>
             {
                 {ItemListingStatus.Active, "Active Store Items" },
@@ -19,10 +20,19 @@ namespace RickApps.UploadFilesMVC.Data
             };
         }
 
+        /// <summary>
+        /// Create a new item and populate fields with default values.
+        /// </summary>
+        /// <returns></returns>
         public Item CreateNewItem()
         {
             Item item = new Item();
-
+            // Figure out the next item number. This works provided we
+            // don't have too many simultaneous users creating items.
+            item.Number = _entity.Max(p => p.Number) + 1;
+            item.Status = ItemListingStatus.Draft;
+            item.Name = "New Item";
+            item.Price = 0;
             return item;
         }
 
