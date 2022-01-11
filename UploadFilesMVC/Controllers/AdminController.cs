@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using RickApps.MVCWebsite.ViewModels;
 using RickApps.UploadFilesMVC.Data;
 using RickApps.UploadFilesMVC.Interfaces;
 using RickApps.UploadFilesMVC.Models;
@@ -71,6 +70,7 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <param name="collection"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int itemID, IFormCollection collection)
         {
             Item item = null;
@@ -123,10 +123,11 @@ namespace RickApps.UploadFilesMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult ArchiveItem(int itemID, IFormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult ArchiveItem(int itemID)
         {
             Item item = null;
-            ItemListingStatus initStatus = ItemListingStatus.Active;
+            ItemListingStatus initStatus;
             try
             {
                 item = ((ItemRepository)_repository.Items).GetItem(itemID);
@@ -149,7 +150,8 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <param name="collection"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Delete(int itemID, IFormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int itemID)
         {
             ItemListingStatus initStatus = ItemListingStatus.Active;
             try

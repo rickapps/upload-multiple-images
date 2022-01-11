@@ -7,6 +7,12 @@ using System.Linq;
 
 namespace RickApps.UploadFilesMVC.Data
 {
+    public enum ItemSortKey
+    {
+        New,
+        PriceLow,
+        PriceHigh
+    }
     public class ItemRepository : Repository<Item>, IItemRepository
     {
         public ItemRepository(EFContext context) : base(context)
@@ -17,6 +23,12 @@ namespace RickApps.UploadFilesMVC.Data
                 {ItemListingStatus.Active, "Active Store Items" },
                 {ItemListingStatus.Draft, "Draft Items Not Listed" },
                 {ItemListingStatus.Sold, "Sold or Archived" }
+            };
+            ItemSortList = new Dictionary<ItemSortKey, string>
+            {
+                {ItemSortKey.New, "Newly Added"},
+                {ItemSortKey.PriceLow, "Price Low to High"},
+                {ItemSortKey.PriceHigh, "Price High to Low" }
             };
         }
 
@@ -61,8 +73,6 @@ namespace RickApps.UploadFilesMVC.Data
             return itemList.OrderByDescending(p => p.Number);
         }
 
-        
-
         /// <summary>
         /// Use to populate dropdown
         /// </summary>
@@ -72,6 +82,11 @@ namespace RickApps.UploadFilesMVC.Data
             private set;
         }
 
+        public Dictionary<ItemSortKey, string> ItemSortList
+        {
+            get;
+            private set;
+        }
 
     }
 }

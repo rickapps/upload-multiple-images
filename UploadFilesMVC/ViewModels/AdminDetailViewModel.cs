@@ -2,7 +2,7 @@
 using RickApps.UploadFilesMVC.Models;
 using System.Collections.Generic;
 
-namespace RickApps.MVCWebsite.ViewModels
+namespace RickApps.UploadFilesMVC.ViewModels
 {
     public class AdminDetailViewModel
     {
