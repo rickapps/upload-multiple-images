@@ -40,7 +40,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             // by default. This means we obtain a collection of items without their photos. You can change this in
             // the repository call to GetAdminItems by adding .include(p => p.Photos) to the query string. Alternatively, 
             // you could activate ILazyLoader service globally.
-            vm.Items = ((ItemRepository)_repository.Items).GetAdminItems(ItemListingStatus.Active);
+            vm.Items = ((ItemRepository)_repository.Items).GetInventoryItems(sortBy);
             return View(vm);
         }
 

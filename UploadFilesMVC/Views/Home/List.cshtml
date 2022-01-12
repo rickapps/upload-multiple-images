@@ -18,7 +18,7 @@
                                 @using (Html.BeginForm("List", "Home", FormMethod.Post))
                                 {
                                     <label for="SortBy">Sort By:</label>
-                                    @Html.DropDownListFor(vm => vm.SortBy, Model.Sorts, "Newly Added", new { Class = "filter-nameselect form-control", onchange = @"form.submit();" })
+                                    @Html.DropDownListFor(vm => vm.SortBy, Model.Sorts, new { Class = "filter-nameselect form-control", onchange = @"form.submit();" })
                                 }
                             </div>
                         </div>

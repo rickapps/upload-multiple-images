@@ -15,6 +15,10 @@ namespace RickApps.UploadFilesMVC.Data
     }
     public class ItemRepository : Repository<Item>, IItemRepository
     {
+        /// <summary>
+        /// Populate lists needed for drop downs
+        /// </summary>
+        /// <param name="context"></param>
         public ItemRepository(EFContext context) : base(context)
         {
             // Create our item status list for the drop downs.
@@ -66,11 +70,40 @@ namespace RickApps.UploadFilesMVC.Data
             return item;
         }
 
+        /// <summary>
+        /// For administration screens. Retrieves items based on item status
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public IEnumerable<Item> GetAdminItems(ItemListingStatus status)
         {
             var itemList = _entity.Where(p => p.Status == status);
 
             return itemList.OrderByDescending(p => p.Number);
+        }
+
+        /// <summary>
+        /// For user screens. Retrieves active items and sorts
+        /// </summary>
+        /// <param name="sortOrder"></param>
+        /// <returns></returns>
+        public IEnumerable<Item> GetInventoryItems(ItemSortKey sortOrder)
+        {
+            IEnumerable<Item> sorted;
+            var itemList = _entity.Where(p => p.Status == ItemListingStatus.Active);
+            if (sortOrder == ItemSortKey.PriceLow)
+            {
+                sorted = itemList.OrderBy(p=>p.Price);    
+            }
+            else if (sortOrder == ItemSortKey.PriceHigh)
+            {
+                sorted = itemList.OrderByDescending(p => p.Price);    
+            }
+            else
+            {
+                sorted = itemList.OrderByDescending(p => p.ID);
+            }
+            return sorted;
         }
 
         /// <summary>
@@ -82,6 +115,9 @@ namespace RickApps.UploadFilesMVC.Data
             private set;
         }
 
+        /// <summary>
+        /// Use to populate dropdown
+        /// </summary>
         public Dictionary<ItemSortKey, string> ItemSortList
         {
             get;
