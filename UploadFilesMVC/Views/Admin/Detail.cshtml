@@ -89,6 +89,7 @@
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.ItemID)
                         <!-- Note that the onchange event could be blocked. Some browsers do not allow form to be submitted using javascript. -->
+                        <!-- Test the upload button on the browsers you expect to be used. -->
                         <input type="file" multiple style="display: none;" id="files" name="files" onchange="this.form.submit();" />
                         <input type="button" value="Upload..." class="btn btn-primary" onclick="document.getElementById('files').click();" />
                         @Html.ActionLink("Cancel and return to List", "Index", null, new { Status=Model.OrigStatus }, new { @class = "btn btn-default" })

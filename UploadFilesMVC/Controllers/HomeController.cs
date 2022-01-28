@@ -56,8 +56,8 @@ namespace RickApps.UploadFilesMVC.Controllers
             return View();
         }
 
-        // GET: Items/Details/5
-        public IActionResult Details(int? id)
+        // GET: Home/Details/5
+        public IActionResult Detail(int? id, ItemSortKey sortBy)
         {
             Item item = null;
             if (id.HasValue)

@@ -40,14 +40,14 @@
                                         <div class="overlay">
                                             <ul class="list-unstyled">
                                                 <li>@Html.ActionLink("View Detail", "Detail", "Home",
-                                                   new { id = item.Number, sortBy = @Model.SortBy },
+                                                   new { id = item.ID, sortBy = @Model.SortBy },
                                                    new { @class = "btn btn-dark" })</li>
                                             </ul>
                                         </div>
                                     </div>
                                     <h4>
                                         @Html.ActionLink(item.Name, "Detail", "Home", 
-                                       new { id = item.Number, sortBy = @Model.SortBy }, 
+                                       new { id = item.ID, sortBy = @Model.SortBy }, 
                                        new { @class = "item-name" })
                                     </h4>
                                     <ul class="price list-inline">
