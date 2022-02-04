@@ -150,7 +150,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                     //Create a new name for our file. The name is based on the item number and sequence
                     string baseName = Path.GetFileName(s);
                     // Copy and rename the file to our destination folder
-                    System.IO.File.Copy(s, Path.Join(largePath, baseName));
+                    System.IO.File.Copy(s, Path.Join(largePath, baseName), true);
                     using (FileStream fullSizeImg = new FileStream(s, FileMode.Open, FileAccess.Read))
                     {
                         //Create two new image sizes
@@ -179,7 +179,8 @@ namespace RickApps.UploadFilesMVC.Controllers
         /// <summary>
         /// Resize an image to a specified width. Aspect ratio is preserved.
         /// The source image is not altered.
-        /// This will work if hosted on Windows. Not tried on other platforms.
+        /// This will work if hosted on Windows. Not tried on other platforms,
+        /// but unlikely to work as written.
         /// </summary>
         /// <param name="pngStream"></param>
         /// <param name="saveName"></param>

@@ -36,10 +36,8 @@ namespace RickApps.UploadFilesMVC.Controllers
             // But seriously, you really might want to obtain all your data from a repository for larger projects.
             vm.Sorts = new SelectList(((ItemRepository)_repository.Items).ItemSortList, "Key", "Value", sortBy);
             vm.SortBy = sortBy;
-            // Now we get all the items that have the specified status. Note that EF core does not do lazy loading
-            // by default. This means we obtain a collection of items without their photos. You can change this in
-            // the repository call to GetAdminItems by adding .include(p => p.Photos) to the query string. Alternatively, 
-            // you could activate ILazyLoader service globally.
+            // Retrieve all the active items along with their photos. Due to lazy loading we have to explicitly
+            // ask for the photos in the method GetInventoryItems
             vm.Items = ((ItemRepository)_repository.Items).GetInventoryItems(sortBy);
             return View(vm);
         }
@@ -60,16 +58,18 @@ namespace RickApps.UploadFilesMVC.Controllers
         public IActionResult Detail(int? id, ItemSortKey sortBy)
         {
             Item item = null;
+            HomeDetailViewModel vm = null;
             if (id.HasValue)
             {
                 item = _repository.Items.Get(id.Value);
+                vm = new HomeDetailViewModel(item);
             }
             if (item == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            return View(vm);
         }
     }
 }

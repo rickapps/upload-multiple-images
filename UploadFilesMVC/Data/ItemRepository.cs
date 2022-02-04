@@ -83,14 +83,14 @@ namespace RickApps.UploadFilesMVC.Data
         }
 
         /// <summary>
-        /// For user screens. Retrieves active items and sorts
+        /// For user screens. Retrieves active items with photos and sorts
         /// </summary>
         /// <param name="sortOrder"></param>
         /// <returns></returns>
         public IEnumerable<Item> GetInventoryItems(ItemSortKey sortOrder)
         {
             IEnumerable<Item> sorted;
-            var itemList = _entity.Where(p => p.Status == ItemListingStatus.Active);
+            var itemList = _entity.Where(p => p.Status == ItemListingStatus.Active).Include(p=>p.Photos);
             if (sortOrder == ItemSortKey.PriceLow)
             {
                 sorted = itemList.OrderBy(p=>p.Price);    
