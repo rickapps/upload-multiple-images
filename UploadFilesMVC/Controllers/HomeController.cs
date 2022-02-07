@@ -61,7 +61,8 @@ namespace RickApps.UploadFilesMVC.Controllers
             HomeDetailViewModel vm = null;
             if (id.HasValue)
             {
-                item = _repository.Items.Get(id.Value);
+                // Get item with photos
+                item = _repository.Items.GetItem(id.Value);
                 vm = new HomeDetailViewModel(item);
             }
             if (item == null)
