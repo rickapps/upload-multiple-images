@@ -14,6 +14,9 @@ using System.Linq;
 
 namespace RickApps.UploadFilesMVC.Controllers
 {
+    /// <summary>
+    /// Resize images
+    /// </summary>
     public class PhotoController : BaseController
     {
         private IWebHostEnvironment hostEnv;
@@ -26,7 +29,8 @@ namespace RickApps.UploadFilesMVC.Controllers
 
         // We use the item number to determine the folder for uploaded files. Rather than put all pics
         // into a single folder, we will create a new folder for every 100 items. The intent is to keep
-        // from having a very large number of files in a single folder which could slow retrieval.
+        // from having a very large number of files in a single folder which could slow retrieval. It also
+        // makes specific photos easier to locate using CPanel. 
         private void InitProperties(int Number)
         {
             // Remove the rightmost two digits from Number to determine our destination folder
@@ -37,6 +41,12 @@ namespace RickApps.UploadFilesMVC.Controllers
             return;
         }
 
+        /// <summary>
+        /// Delete an image from the database. It is not deleted from the hard drive.
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="imageID"></param>
+        /// <returns></returns>
         public RedirectToActionResult DeleteImage(int ID, int imageID)
         {
             Photo image = ((PhotoRepository)_repository.ItemPhotos).GetItemImages(ID).SingleOrDefault(p => p.ID == imageID);
@@ -46,6 +56,12 @@ namespace RickApps.UploadFilesMVC.Controllers
             return RedirectToAction("Edit", "Admin", new { ID = ID, isPhoto = true });
         }
 
+        /// <summary>
+        /// Bare bones upload
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult UploadFiles(int itemID, IFormFile[] files)
         {
@@ -56,7 +72,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                 List<string> uploadedFiles = new List<string>(); 
                 Item item = ((ItemRepository)_repository.Items).GetItem(itemID);
                 InitProperties(item.Number);
-                // Get the next sequence number. Cannot do a count. Need to retrieve max number
+                // Get the next sequence number. Don't rely on count. Need to retrieve max sequence
                 int start = item.Photos.Count > 0 ? (item.Photos.Max(p=>p.Sequence)) + 1 : 1;
                 int seq = start;
                 if (ModelState.IsValid)
@@ -66,7 +82,7 @@ namespace RickApps.UploadFilesMVC.Controllers
                         // Make sure file is within valid size
                         if (file.Length > 0 && file.Length < 4000000)  // About 4MB
                         {
-                            // Check file extension to make sure it is allowed.
+                            // Might add code here to check extension to make sure it is allowed.
                             // Generate a name for the uploaded file. Don't keep original name
                             inputFileName = String.Format("{0}-{1:D2}.jpg", item.Number, seq);
                             // We don't know much about the uploaded file. Store it outside of our website

@@ -26,7 +26,10 @@ namespace RickApps.UploadFilesMVC
 
             services.AddDbContext<EFContext>(options =>
             {
+                // Below works for SQL Server Express and for SQL Server. Just add/change your connection
+                // string in appsettings.json.
                 options.UseSqlServer(Configuration.GetConnectionString("AzureMVCContext"));
+                // Not using the logger now, but you could if you wanted.
                 options.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
             });
 

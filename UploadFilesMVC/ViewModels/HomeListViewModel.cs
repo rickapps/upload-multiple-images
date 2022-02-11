@@ -5,11 +5,6 @@
     using RickApps.UploadFilesMVC.Data;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// RickApps.com
-    /// Copyright (C) 2017 Rick Eichhorn
-    /// Created: October 28, 2017
-    /// </summary>
     public class HomeListViewModel
     {
         public HomeListViewModel()

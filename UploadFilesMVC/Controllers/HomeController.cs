@@ -4,9 +4,7 @@ using RickApps.UploadFilesMVC.Data;
 using RickApps.UploadFilesMVC.Interfaces;
 using RickApps.UploadFilesMVC.Models;
 using RickApps.UploadFilesMVC.ViewModels;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace RickApps.UploadFilesMVC.Controllers
 {
@@ -29,6 +27,11 @@ namespace RickApps.UploadFilesMVC.Controllers
             return View();
         }
 
+        /// <summary>
+        /// List all active items using the designated sort order
+        /// </summary>
+        /// <param name="sortBy"></param>
+        /// <returns></returns>
         public IActionResult List(ItemSortKey sortBy = ItemSortKey.New)
         {
             HomeListViewModel vm = new HomeListViewModel();
@@ -48,13 +51,22 @@ namespace RickApps.UploadFilesMVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        // GET: Items
+        /// <summary>
+        /// Introductory Page
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
             return View();
         }
 
-        // GET: Home/Details/5
+        /// <summary>
+        /// Display a specific item record. SortKey is used to preserve
+        /// our sort order when we return to the list page.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sortBy"></param>
+        /// <returns></returns>
         public IActionResult Detail(int? id, ItemSortKey sortBy)
         {
             Item item = null;

@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// This came from YouTube, Programming With Mosh - Repository Pattern. The idea is to subclass the DataContext class
+    /// This actually came from YouTube, Programming With Mosh - Repository Pattern. The idea is to subclass the DataContext class
     /// to pull data from different sources. The UnitOfWork class takes a DataContext object in its constructor. A UnitOfWork
     /// can contain several repositories, all must use the same DataContext so we can implement transactions.  
     /// </summary>

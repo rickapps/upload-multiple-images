@@ -17,6 +17,10 @@ namespace RickApps.UploadFilesMVC.Data
 
         public IPhotoRepository ItemPhotos { get; private set; }
 
+        /// <summary>
+        /// Here is where we commit a transaction.
+        /// </summary>
+        /// <returns></returns>
         public int Complete()
         {
             return _context.SaveChanges();

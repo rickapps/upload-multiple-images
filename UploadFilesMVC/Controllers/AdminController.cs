@@ -10,6 +10,9 @@ using System;
 
 namespace RickApps.UploadFilesMVC.Controllers
 {
+    /// <summary>
+    /// Controller for administrative functions. Enable authorization on this controller to restrict who can modify website content.
+    /// </summary>
     public class AdminController : BaseController
     {
         #region Constructors
@@ -23,8 +26,7 @@ namespace RickApps.UploadFilesMVC.Controllers
         #endregion
 
         /// <summary>
-        /// Display our default view. I don't decorate the method with [HttpPost] as I don't 
-        /// need to have two Index methods.
+        /// Display our default view. 
         /// </summary>
         /// <param name="ItemStatus"></param>
         /// <returns></returns>
@@ -36,7 +38,7 @@ namespace RickApps.UploadFilesMVC.Controllers
             vm.StatusList = new SelectList(((ItemRepository)_repository.Items).ItemStatusList, "Key", "Value", Status);
             vm.Status = Status;
             // Now we get all the items that have the specified status. Note that EF core does not do lazy loading
-            // by default. This means we obtain a collection of items without their photos. You can change this in
+            // by default. This means we obtain a collection of items without their photos. You can change this behavior in
             // the repository call to GetAdminItems by adding .include(p => p.Photos) to the query string. Alternatively, 
             // you could activate ILazyLoader service globally.
             vm.Items = ((ItemRepository)_repository.Items).GetAdminItems(Status);
@@ -122,6 +124,11 @@ namespace RickApps.UploadFilesMVC.Controllers
             return RedirectToAction("Index", new { Status = ItemListingStatus.Draft });
         }
 
+        /// <summary>
+        /// Archived items are not displayed to the user, but remain in our database.
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ArchiveItem(int itemID)
