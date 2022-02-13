@@ -39,6 +39,8 @@ bld/
 wwwroot/pics/
 wwwroot/lib/
 
+Migrations/
+
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
