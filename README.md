@@ -9,9 +9,10 @@ A website for uploading photos. The website resizes photos and associates them w
 - Entity Framework Core 6.01 Code First
 
 ### Installation:
-1. From the Visual Studio 2022 menu, select:
+1. Clone and build the project
+2. From the Visual Studio 2022 menu, select:
 *Tools->NuGet Package Manager->Package Manager Console*
-2. Enter the following two commands into the console:
+3. Enter the following two commands into the console:
 > Add-Migration Initial
 > 
 > Update-Database
