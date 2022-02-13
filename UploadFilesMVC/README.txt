@@ -1,4 +1,10 @@
-﻿Before you can successfully run this website, you must create a SQL Server Express LocalDB Database.
+﻿Instructions for UploadFilesMVC Project
+
+First, right click on the Solution in Visual Studio Solution Explorer. Select 'Restore Client-Side Libraries' from the
+drop-down menu. This will download a copy of Font-Awesome and add it to the folder wwwroot/lib. Look at the file
+libman.json if you are curious how this is accomplished.
+
+Now, before you can successfully run this website, you must create a SQL Server Express LocalDB Database.
 
 1). From the Visual Studio 2022 menu, select:
 Tools->NuGet Package Manager->Package Manager Console
@@ -12,3 +18,6 @@ will generate the file C:\Users\<username>\RickAppsUploadFilesMVC.mdf. It will r
 generate the tables and relations.
 
 If you want to use a database other than LocalDB, create a new connection string in appsettings.json and edit Startup.cs. 
+
+Build the project and run. If you get Server 500 errors, make sure you have the latest version of Visual Studio 2022 installed.
+You can also try changing the port number in Properties/launchSettings.json.
