@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using RickApps.UploadFilesMVC.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +11,12 @@ namespace RickApps.UploadFilesMVC.Controllers
 {
     public class AuthorizeController : Controller
     {
+        Credentials _admin;
+        public AuthorizeController(IOptions<Credentials> admin)
+        {
+            _admin = admin.Value;
+        }
+
         public IActionResult Login()
         {
             return View();
@@ -17,7 +25,7 @@ namespace RickApps.UploadFilesMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password, string ReturnUrl)
         {
-            if ((username == "Admin") && (password == "Upload1"))
+            if ((username == _admin.UserName) && (password == _admin.PassWord))
             {
                 var claims = new List<Claim>
                 {

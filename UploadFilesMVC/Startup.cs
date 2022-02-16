@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RickApps.UploadFilesMVC.Data;
 using RickApps.UploadFilesMVC.Interfaces;
+using RickApps.UploadFilesMVC.Models;
 
 namespace RickApps.UploadFilesMVC
 {
@@ -23,6 +24,7 @@ namespace RickApps.UploadFilesMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // We will use cookie authentication for our admin and photo controllers.
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -32,17 +34,25 @@ namespace RickApps.UploadFilesMVC
 
             services.AddControllersWithViews();
 
+            // Set up our database. 
             services.AddDbContext<EFContext>(options =>
             {
-                // Below works for SQL Server Express and for SQL Server. Just add/change your connection
-                // string in appsettings.json.
+                // Below works for SQL Server Express, SQL Server and even Azure. Just add/change your connection
+                // string in appsettings.json. 
                 options.UseSqlServer(Configuration.GetConnectionString("SQLServerMVCContext"));
-                // Not using the logger now, but you could if you wanted.
+                // Not using the logger in this project, but you could add if you wanted.
                 options.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
             });
 
-            // Add our unit of work to manage all our repositories
+            // Add our unit of work to manage all our repositories. Use same instance for all.
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Injection for our AuthorizeController. We are using the Options pattern here.
+            // Consider putting the user/pass in the database instead of appsettings.
+            // We only have one login for the administrator and one role, so it seems overkill to use Identity,
+            // but remember Visual Studio can add all tables and code automatically if you decide to use it.
+            services.Configure<Credentials>(
+                Configuration.GetSection(Credentials.Administrator));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +73,7 @@ namespace RickApps.UploadFilesMVC
 
             app.UseRouting();
 
+            // We added the two statements below for our login stuff
             app.UseAuthentication();
             app.UseAuthorization();
 
