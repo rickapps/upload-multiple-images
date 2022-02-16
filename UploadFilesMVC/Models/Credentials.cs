@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RickApps.UploadFilesMVC.Models
 {
+    [NotMapped]
     public class Credentials
     {
         // The value of the constant is what we put in appsettings.json
