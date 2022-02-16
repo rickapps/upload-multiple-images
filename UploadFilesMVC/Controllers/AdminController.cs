@@ -13,6 +13,7 @@ namespace RickApps.UploadFilesMVC.Controllers
     /// <summary>
     /// Controller for administrative functions. Enable authorization on this controller to restrict who can modify website content.
     /// </summary>
+    [Authorize]
     public class AdminController : BaseController
     {
         #region Constructors

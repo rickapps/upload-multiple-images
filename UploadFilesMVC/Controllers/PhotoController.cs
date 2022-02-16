@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RickApps.UploadFilesMVC.Data;
@@ -17,6 +18,7 @@ namespace RickApps.UploadFilesMVC.Controllers
     /// <summary>
     /// Resize images
     /// </summary>
+    [Authorize]
     public class PhotoController : BaseController
     {
         private IWebHostEnvironment hostEnv;
