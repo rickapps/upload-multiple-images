@@ -25,11 +25,13 @@ namespace RickApps.UploadFilesMVC
         public void ConfigureServices(IServiceCollection services)
         {
             // We will use cookie authentication for our admin and photo controllers.
+            // You can add options to customize the cookie. Like how long to expire,
+            // and other security settings.
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
                 options.LoginPath = "/Authorize/Login";
-
+                options.Cookie.Name = ".RickApps.MVCUpload";
             });
 
             services.AddControllersWithViews();
@@ -48,9 +50,9 @@ namespace RickApps.UploadFilesMVC
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Injection for our AuthorizeController. We are using the Options pattern here.
-            // Consider putting the user/pass in the database instead of appsettings.
-            // We only have one login for the administrator and one role, so it seems overkill to use Identity,
-            // but remember Visual Studio can add all tables and code automatically if you decide to use it.
+            // Consider using the database instead of appsettings for credentials.
+            // We only have one login for the administrator and one role, so it seems overkill to use Identity.
+            // But know that Visual Studio can add all tables and code automatically if you decide to use it.
             services.Configure<Credentials>(
                 Configuration.GetSection(Credentials.Administrator));
         }
