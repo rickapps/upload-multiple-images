@@ -44,7 +44,10 @@ namespace RickApps.UploadFilesMVC.Data
             Item item = new Item();
             // Figure out the next item number. This works provided we
             // don't have too many simultaneous users creating items.
-            item.Number = _entity.Max(p => p.Number) + 1;
+            if (_entity.Count() > 0)
+                item.Number = _entity.Max(p => p.Number) + 1;
+            else
+                item.Number = 100;
             item.Status = ItemListingStatus.Draft;
             item.Name = "New Item";
             item.Price = 0;
