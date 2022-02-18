@@ -9,7 +9,7 @@
     {
         public HomeListViewModel()
         {
-            PageTitle = "Inventory";
+            PageTitle = "Item List";
         }
         /// <summary>
         /// Gets or sets the sorting combo box list.
@@ -23,7 +23,7 @@
         /// <summary>
         /// Gets or sets the page label
         /// </summary>
-        public string PageTitle { get; set; }
+        public string PageTitle { get; private set; }
 
     }
 }

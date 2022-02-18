@@ -58,16 +58,6 @@
                     <div class="description">
                         <p>@Model.Description</p>
                     </div>
-                    <div class="CTAs">
-                        <ul class="list-inline">
-                            <li class="list-inline-item">@Html.ActionLink("Add To Cart", "AddToCart", "Shopping",
-                                                   new { itemCode = Model.Number },
-                                                   new { @class = "btn btn-unique" })</li>
-                            <li class="list-inline-item">@Html.ActionLink("Ask Question", "Contact", "Home",
-                                                   new { itemCode = Model.Number },
-                                                   new { @class = "btn btn-dark" })</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>

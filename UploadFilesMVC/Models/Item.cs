@@ -26,7 +26,7 @@ namespace RickApps.UploadFilesMVC.Models
         public ItemListingStatus Status { get; set; }
         public string FormattedPrice
         {
-            get { return String.Format("{0:C0}", Price); }
+            get { return String.Format("{0:C}", Price); }
         }
         public ICollection<Photo> Photos { get; set; }
     }
