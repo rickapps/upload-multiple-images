@@ -20,4 +20,5 @@ generate the tables and relations.
 If you want to use a database other than LocalDB, create a new connection string in appsettings.json and edit Startup.cs. 
 
 Build the project and run. If you get Server 500 errors, make sure you have the latest version of Visual Studio 2022 installed.
-You can also try changing the port number in Properties/launchSettings.json.
+You can also try changing the port number in Properties/launchSettings.json. If you have problems uploading photos, you will 
+need to grant your web server write permission to folder wwwroot/pics/.
