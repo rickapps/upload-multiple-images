@@ -88,8 +88,10 @@
                     <div class="card-footer">
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.ItemID)
+                        <!-- Want one button to both browse file and submit form. Using some javascript and display: none to do it. -->
                         <!-- Note that the onchange event could be blocked. Some browsers do not allow form to be submitted using javascript. -->
-                        <!-- Test the upload button on the browsers you expect to be used. -->
+                        <!-- Test the upload button on the browsers you expect to be used. Otherwise, you may have to have two buttons. -->
+                        <!-- A nice thing about having two buttons is that your 'Save' button could save the info on both the Item tab and Photo tab. -->
                         <input type="file" multiple style="display: none;" id="files" name="files" onchange="this.form.submit();" />
                         <input type="button" value="Upload..." class="btn btn-primary" onclick="document.getElementById('files').click();" />
                         @Html.ActionLink("Cancel and return to List", "Index", null, new { Status=Model.OrigStatus }, new { @class = "btn btn-default" })
