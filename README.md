@@ -10,7 +10,7 @@ A website for uploading photos. The website resizes photos and associates them w
 
 ### Installation:
 Open the solution file in Visual Studio, then:
-1. From Solution Explorer, click on the project solution.
+1. From Solution Explorer, right click on the project solution.
 2. Select *Restore Client-Side Libraries* from the drop-down menu.
 2. From the Visual Studio 2022 main menu, select:
 *Tools->NuGet Package Manager->Package Manager Console*
