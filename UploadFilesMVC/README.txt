@@ -1,6 +1,6 @@
 ﻿Instructions for UploadFilesMVC Project
 
-First, right click on the Solution in Visual Studio Solution Explorer. Select 'Restore Client-Side Libraries' from the
+First, right click on the Solution (very top line) in Visual Studio Solution Explorer. Select 'Restore Client-Side Libraries' from the
 drop-down menu. This will download a copy of Font-Awesome and add it to the folder wwwroot/lib. Look at the file
 libman.json if you are curious how this is accomplished.
 
@@ -15,7 +15,7 @@ Update-Database
 Add-Migrations will add a Migrations Folder to the project that contains instructions on creating the database tables.
 Update-Database will create the database file specified in appsettings.json. If you do not alter this file, the command
 will generate the file C:\Users\<username>\RickAppsUploadFilesMVC.mdf. It will run the commands in the migration file to
-generate the tables and relations.
+generate the tables and relations. 
 
 If you want to use a database other than LocalDB, create a new connection string in appsettings.json and edit Startup.cs. 
 

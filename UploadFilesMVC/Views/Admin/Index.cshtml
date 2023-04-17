@@ -12,7 +12,7 @@
                     @using (Html.BeginForm("Index", "Admin", FormMethod.Post, new { @class = "form-inline" }))
                     {
                         <label class="m-1" for="ItemStatus">Display: </label>
-                                    @Html.DropDownListFor(vm => vm.Status, Model.StatusList, new { Class = "filter-nameselect form-control m-1", onchange = @"form.submit();" })
+                                    @Html.DropDownListFor(vm => vm.Status, Model.StatusList, new { Class = "form-select form-control m-1", onchange = @"form.submit();" })
                     }
                 </div>
                 <div class="col filters d-flex float-right">

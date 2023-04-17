@@ -8,7 +8,8 @@
                         <h1 class="heading-line">@Model.PageTitle</h1>
                         @if (Model.Items.Count() == 0)
                         {
-                            <p>Database is empty! Click Admin on the Nav menu to add some items.</p>
+                            <p>No items to display! Click Admin on the Nav menu to add some items (Top right of window).</p>
+                            <p>Also remember to set the status of your items. Only 'Active' items appear here. 'Draft' and 'Archived' will not be visible.</p>
                         }
                     </div>
                     <div class="col-md-6">
@@ -16,7 +17,7 @@
                             @using (Html.BeginForm("List", "Home", FormMethod.Post))
                             {
                                 <label for="SortBy">Sort By:</label>
-                                @Html.DropDownListFor(vm => vm.SortBy, Model.Sorts, new { Class = "filter-nameselect form-control", onchange = @"form.submit();" })
+                                @Html.DropDownListFor(vm => vm.SortBy, Model.Sorts, new { Class = "form-select form-control", onchange = @"form.submit();" })
                             }
                         </div>
                     </div>
